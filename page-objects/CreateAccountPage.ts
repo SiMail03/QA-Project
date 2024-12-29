@@ -1,7 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { LoadComponentsReturnType } from "next/dist/server/load-components";
 import { AbstractPage } from "./AbstractPage";
-
+ 
 export class CreateAccountPage extends AbstractPage {
   readonly myAccountButton: Locator;
   readonly url: string;
@@ -24,7 +23,7 @@ export class CreateAccountPage extends AbstractPage {
   readonly invalidPhoneNumber: Locator;
   readonly invalidPassword: Locator;
   readonly invalidConfirmPassword: Locator;
-
+ 
   constructor(page: Page) {
     super(page);
     this.myAccountButton = page.locator(
@@ -46,11 +45,11 @@ export class CreateAccountPage extends AbstractPage {
     this.privacyPolicyErrorMessage = page.getByText(
       "Warning: You must agree to the Privacy Policy!"
     );
-
+ 
     this.invalidFirstName = page.getByText(
       "First Name must be between 1 and 32 characters!"
     );
-
+ 
     this.invalidLastName = page.locator("div.text-danger", {
       hasText: "Last Name must be between 1 and 32 characters!",
     });
@@ -70,7 +69,7 @@ export class CreateAccountPage extends AbstractPage {
       hasText: "Password confirmation does not match password!",
     });
   }
-
+ 
   async createAccount(
     firstname: string,
     lastname: string,
@@ -88,30 +87,62 @@ export class CreateAccountPage extends AbstractPage {
     await this.confirmPasswordInput.fill(password); // Added password confirmation
     await this.privacyPolicyButton.click();
     this.submitButton.click(); // Click the submit button
+    await this.page.waitForTimeout(3000);
   }
-
+  async createAccountWithoutPrivacyPolicy(
+    firstname: string,
+    lastname: string,
+    email: string,
+    telephone: string,
+    password: string
+  ) {
+    await this.myAccountButton.click();
+    await this.registerAccountLink.click();
+    await this.firstNameInput.fill(firstname);
+    await this.lastNameInput.fill(lastname);
+    await this.emailInput.fill(email);
+    await this.telephoneInput.fill(telephone); // Fill telephone input
+    await this.passwordInput.fill(password);
+    await this.confirmPasswordInput.fill(password); // Added password confirmation
+    this.submitButton.click(); // Click the submit button
+    await this.page.waitForTimeout(3000);
+  }
+ 
+  async createAccountWithPasswordMismatch(
+    firstname: string,
+    lastname: string,
+    email: string,
+    telephone: string,
+    password: string
+  ) {
+    await this.myAccountButton.click();
+    await this.registerAccountLink.click();
+    await this.firstNameInput.fill(firstname);
+    await this.lastNameInput.fill(lastname);
+    await this.emailInput.fill(email);
+    await this.telephoneInput.fill(telephone); // Fill telephone input
+    await this.passwordInput.fill(password);
+    await this.confirmPasswordInput.fill(password + "123"); // Added password confirmation
+    this.submitButton.click(); // Click the submit button
+    await this.page.waitForTimeout(3000);
+  }
+ 
   async assertSuccessMessage() {
     await expect(this.successMessage).toContainText(
       "Your Account Has Been Created!"
     );
   }
-
+ 
   async assertAlreadyExistsError() {
     await expect(this.alreadyExistsMessage).toContainText(
       "Warning: E-Mail Address is already registered!"
     );
   }
-
-  async assertInvalidFirstName() {
-    await expect(this.invalidFirstName).toContainText(
-      "First Name must be between 1 and 32 characters!"
-    );
-  }
-
+ 
   async assertInvalidFields() {
     // Wait for any potential error messages to appear
     await this.page.waitForTimeout(1000);
-
+ 
     // Check visibility of all error messages
     const errorMessage1Visible = await this.invalidFirstName.isVisible();
     const errorMessage2Visible = await this.invalidLastName.isVisible();
@@ -120,7 +151,7 @@ export class CreateAccountPage extends AbstractPage {
     const errorMessage5Visible = await this.invalidPhoneNumber.isVisible();
     const errorMessage6Visible = await this.invalidPassword.isVisible();
     const errorMessage7Visible = await this.invalidConfirmPassword.isVisible();
-
+ 
     // Log visibility for debugging
     console.log({
       errorMessage1Visible,
@@ -131,7 +162,7 @@ export class CreateAccountPage extends AbstractPage {
       errorMessage6Visible,
       errorMessage7Visible,
     });
-
+ 
     // Assert that at least one error message is visible
     expect(
       errorMessage1Visible ||
@@ -143,7 +174,7 @@ export class CreateAccountPage extends AbstractPage {
         errorMessage7Visible
     ).toBeTruthy();
   }
-
+ 
   async assertPrivacyPolicyError() {
     await expect(this.privacyPolicyErrorMessage).toContainText(
       "Warning: You must agree to the Privacy Policy!"
