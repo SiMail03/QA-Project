@@ -1,10 +1,8 @@
-import { Header } from "./Header";
 import { expect, Locator, Page } from "@playwright/test";
 import { AbstractPage } from "./AbstractPage";
 
 export class CreateAccountPage extends AbstractPage {
-  readonly header: Header; // Add footer instance
-
+  readonly myAccountButton: Locator;
   readonly url: string;
   readonly registerAccountLink: Locator;
   readonly firstNameInput: Locator;
@@ -23,7 +21,9 @@ export class CreateAccountPage extends AbstractPage {
 
   constructor(page: Page) {
     super(page);
-    this.header = new Header(page); // Initialize Header
+    this.myAccountButton = page.locator(
+      'a[href="https://naveenautomationlabs.com/opencart/index.php?route=account/account"][title="My Account"].dropdown-toggle'
+    );
     this.registerAccountLink = page.locator("text=Register");
     this.firstNameInput = page.getByPlaceholder("First Name");
     this.lastNameInput = page.getByPlaceholder("Last Name");
@@ -52,7 +52,7 @@ export class CreateAccountPage extends AbstractPage {
     telephone: string,
     password: string
   ) {
-    await this.header.clickMyAccountButton();
+    await this.myAccountButton.click();
     await this.registerAccountLink.click();
     await this.firstNameInput.fill(firstname);
     await this.lastNameInput.fill(lastname);
@@ -62,6 +62,7 @@ export class CreateAccountPage extends AbstractPage {
     await this.confirmPasswordInput.fill(password); // Added password confirmation
     await this.privacyPolicyButton.click();
     this.submitButton.click(); // Click the submit button
+    await this.page.waitForTimeout(3000); // Timeout in milliseconds (3000ms = 3 seconds)
   }
 
   async assertSuccessMessage() {
