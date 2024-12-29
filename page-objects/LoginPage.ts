@@ -8,8 +8,8 @@ export class LoginPage extends AbstractPage {
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
   readonly successMessage: Locator;
-  readonly errorMessage1: Locator;
-  readonly errorMessage2: Locator;
+  readonly invalidCredentialsErrorMessage: Locator;
+  readonly exceededLoginAttemptErrorMessage: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -24,20 +24,21 @@ export class LoginPage extends AbstractPage {
     this.passwordInput = page.locator("#input-password");
     this.loginButton = page.getByRole("button", { name: "Login" });
     this.successMessage = page.getByText("Edit your account information");
-    this.errorMessage1 = page.getByText(
+    this.invalidCredentialsErrorMessage = page.getByText(
       "Warning: No match for E-Mail Address and/or Password"
     );
-    this.errorMessage2 = page.getByText(
+    this.exceededLoginAttemptErrorMessage = page.getByText(
       "Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour."
     );
   }
 
-  async logIn(email: string, password: string) {
+  async login(email: string, password: string) {
     await this.myAccountButton.click();
     await this.loginAccountLink.click();
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
+
     await this.page.waitForTimeout(3000); // Timeout in milliseconds (3000ms = 3 seconds)
   }
 
@@ -48,12 +49,34 @@ export class LoginPage extends AbstractPage {
   }
 
   async assertErrorMessage() {
-    const errorMessage1Visible = await this.errorMessage1.isVisible();
-    const errorMessage2Visible = await this.errorMessage2.isVisible();
+    const errorMessage1Visible =
+      await this.invalidCredentialsErrorMessage.isVisible();
+    const errorMessage2Visible =
+      await this.exceededLoginAttemptErrorMessage.isVisible();
 
     expect(
       errorMessage1Visible || errorMessage2Visible,
       "Expected either error message 1 or error message 2 to be visible."
     ).toBeTruthy();
+  }
+
+  async assertExceededLoginAttemptsError() {
+    await expect(this.exceededLoginAttemptErrorMessage).toHaveText(
+      "Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour."
+    );
+  }
+
+  async exceededLoginAttempts(email: string, password: string) {
+    await this.myAccountButton.click();
+    await this.loginAccountLink.click();
+    const invalidUsername = "invalidUser";
+    const invalidPassword = "invalidPassword";
+    const maxAttempts = 5;
+    for (let i = 0; i < maxAttempts; i++) {
+      await this.emailInput.fill(email);
+      await this.passwordInput.fill(password);
+      await this.loginButton.click();
+    }
+    await this.page.waitForTimeout(2000); // Timeout in milliseconds (3000ms = 3 seconds)
   }
 }
