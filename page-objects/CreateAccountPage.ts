@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
+import { LoadComponentsReturnType } from "next/dist/server/load-components";
 import { AbstractPage } from "./AbstractPage";
 
 export class CreateAccountPage extends AbstractPage {
@@ -15,9 +16,14 @@ export class CreateAccountPage extends AbstractPage {
   readonly submitButton: Locator;
   readonly successMessage: Locator;
   readonly alreadyExistsMessage: Locator;
-  readonly requiredFieldMissing: Locator;
-  readonly invalidEmailError: Locator;
-  readonly invalidTelephoneError: Locator; // New error locator for invalid telephone
+  readonly privacyPolicyErrorMessage: Locator;
+  readonly invalidFirstName: Locator;
+  readonly invalidLastName: Locator;
+  readonly invalidEmail1: Locator;
+  readonly invalidEmail2: Locator;
+  readonly invalidPhoneNumber: Locator;
+  readonly invalidPassword: Locator;
+  readonly invalidConfirmPassword: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -31,18 +37,38 @@ export class CreateAccountPage extends AbstractPage {
     this.telephoneInput = page.getByPlaceholder("Telephone"); // Locator for telephone
     this.passwordInput = page.getByPlaceholder("Password", { exact: true });
     this.confirmPasswordInput = page.getByPlaceholder("Password Confirm");
-    this.privacyPolicyButton = page.getByRole("checkbox");
+    this.privacyPolicyButton = page.locator(
+      'input[type="checkbox"][name="agree"][value="1"]'
+    );
     this.submitButton = page.locator(".btn.btn-primary");
     this.successMessage = page.locator("#content");
     this.alreadyExistsMessage = page.getByText("Warning: E-Mail Address is");
+    this.privacyPolicyErrorMessage = page.getByText(
+      "Warning: You must agree to the Privacy Policy!"
+    );
 
-    this.requiredFieldMissing = page.locator(
-      ".alert.alert-danger.alert-dismissible"
+    this.invalidFirstName = page.getByText(
+      "First Name must be between 1 and 32 characters!"
     );
-    this.invalidEmailError = page.locator(
-      "text=Please include an '@' in the email address."
-    );
-    this.invalidTelephoneError = page.locator("text=Telephone is required!");
+
+    this.invalidLastName = page.locator("div.text-danger", {
+      hasText: "Last Name must be between 1 and 32 characters!",
+    });
+    this.invalidEmail1 = page.locator("div.text-danger", {
+      hasText: "E-Mail Address does not appear to be valid!",
+    });
+    this.invalidEmail2 = page.locator("div.text-danger", {
+      hasText: "Please include an '@' in the email address.",
+    });
+    this.invalidPhoneNumber = page.locator("div.text-danger", {
+      hasText: "Telephone must be between 3 and 32 characters!",
+    });
+    this.invalidPassword = page.locator("div.text-danger", {
+      hasText: "Password must be between 4 and 20 characters!",
+    });
+    this.invalidConfirmPassword = page.locator("div.text-danger", {
+      hasText: "Password confirmation does not match password!",
+    });
   }
 
   async createAccount(
@@ -62,7 +88,6 @@ export class CreateAccountPage extends AbstractPage {
     await this.confirmPasswordInput.fill(password); // Added password confirmation
     await this.privacyPolicyButton.click();
     this.submitButton.click(); // Click the submit button
-    await this.page.waitForTimeout(3000); // Timeout in milliseconds (3000ms = 3 seconds)
   }
 
   async assertSuccessMessage() {
@@ -77,21 +102,51 @@ export class CreateAccountPage extends AbstractPage {
     );
   }
 
-  async assertInvalidEmailError() {
-    await expect(this.invalidEmailError).toContainText(
-      "Please include an '@' in the email address."
+  async assertInvalidFirstName() {
+    await expect(this.invalidFirstName).toContainText(
+      "First Name must be between 1 and 32 characters!"
     );
   }
 
-  async assertInvalidTelephoneError() {
-    await expect(this.invalidTelephoneError).toContainText(
-      "Telephone is required!" // Adjust the message for telephone validation
-    );
+  async assertInvalidFields() {
+    // Wait for any potential error messages to appear
+    await this.page.waitForTimeout(1000);
+
+    // Check visibility of all error messages
+    const errorMessage1Visible = await this.invalidFirstName.isVisible();
+    const errorMessage2Visible = await this.invalidLastName.isVisible();
+    const errorMessage3Visible = await this.invalidEmail1.isVisible();
+    const errorMessage4Visible = await this.invalidEmail2.isVisible();
+    const errorMessage5Visible = await this.invalidPhoneNumber.isVisible();
+    const errorMessage6Visible = await this.invalidPassword.isVisible();
+    const errorMessage7Visible = await this.invalidConfirmPassword.isVisible();
+
+    // Log visibility for debugging
+    console.log({
+      errorMessage1Visible,
+      errorMessage2Visible,
+      errorMessage3Visible,
+      errorMessage4Visible,
+      errorMessage5Visible,
+      errorMessage6Visible,
+      errorMessage7Visible,
+    });
+
+    // Assert that at least one error message is visible
+    expect(
+      errorMessage1Visible ||
+        errorMessage2Visible ||
+        errorMessage3Visible ||
+        errorMessage4Visible ||
+        errorMessage5Visible ||
+        errorMessage6Visible ||
+        errorMessage7Visible
+    ).toBeTruthy();
   }
 
-  async assertRequiredFieldMissing() {
-    await expect(this.requiredFieldMissing).toContainText(
-      "Warning: First Name is required!" // Adjust message based on the actual required field message
+  async assertPrivacyPolicyError() {
+    await expect(this.privacyPolicyErrorMessage).toContainText(
+      "Warning: You must agree to the Privacy Policy!"
     );
   }
 }

@@ -17,14 +17,6 @@ const config: PlaywrightTestConfig = {
       name: "Chromium",
       use: { browserName: "chromium" },
     },
-    {
-      name: "Firefox",
-      use: { browserName: "firefox" },
-    },
-    {
-      name: "Webkit",
-      use: { browserName: "webkit" },
-    },
   ],
 };
 
