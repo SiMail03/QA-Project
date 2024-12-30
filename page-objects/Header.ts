@@ -25,8 +25,8 @@ export class Header extends AbstractPage {
     this.cartButton = page.getByRole("link", { name: "Shopping Cart" });
     this.checkOutButton = page.getByRole("link", { name: "Checkout" });
     this.searchInput = page.getByPlaceholder("Search");
-    this.searchButton = page.locator(".btn.btn-light.btn-lg");
-    this.cartButton = page.locator(
+    this.searchButton = page.locator(".input-group-btn");
+    this.cartInfo = page.locator(
       ".btn.btn-lg.btn-inverse.btn-block.dropdown-toggle"
     );
   }
@@ -35,7 +35,7 @@ export class Header extends AbstractPage {
     await this.myAccountButton.click();
   }
   async searchItem(search: string) {
-    await this.searchInput.fill(search); // Type the search text
-    await this.searchButton.click(); // Click the search button
+    await this.searchInput.fill(search);
+    await this.searchButton.click();
   }
 }

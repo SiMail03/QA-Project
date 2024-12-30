@@ -13,6 +13,9 @@ export class HomePage extends AbstractPage {
   readonly featuredProducts: Locator;
   readonly product: Locator;
   readonly banners: Locator;
+  readonly noItemFoundMessage: Locator;
+  readonly searchResults: Locator;
+  readonly numOfItems: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -25,14 +28,14 @@ export class HomePage extends AbstractPage {
     this.featuredProducts = page.locator("#carousel-banner-0");
     this.product = page.locator(".product-thumb").first();
     this.banners = page.locator("#carousel-banner-1");
+    this.noItemFoundMessage = page.getByText(
+      "There is no product that matches the search criteria."
+    );
+    this.numOfItems = page.locator(".col-sm-6.text-right");
   }
 
   public async navigateToHomePage() {
     await this.page.goto(this.url);
-  }
-
-  public async searchItem(search: string) {
-    await this.header.searchItem(search); // Use header to search
   }
 
   public async checkHomePage() {
@@ -40,5 +43,29 @@ export class HomePage extends AbstractPage {
     await expect(this.featuredProducts).toBeVisible();
     await expect(this.product).toBeVisible();
     await expect(this.banners).toBeVisible();
+  }
+
+  public async searchItem(search: string) {
+    await this.header.searchItem(search); // Use header to search
+  }
+
+  async assertSearchResultsAreDisplayed() {
+    const resultsVisible = await this.product.isVisible();
+    expect(resultsVisible).toBeTruthy();
+  }
+
+  async assertNoItemFoundMessage() {
+    await expect(this.noItemFoundMessage).toContainText(
+      "There is no product that matches the search criteria."
+    );
+  }
+
+  async assertNumberOfSearchResults(expectedCount: string) {
+    await expect(this.numOfItems).toContainText(expectedCount);
+  }
+
+  async assertProductInSearchResults(productName: string) {
+    const product = this.product.locator(`.caption:has-text("${productName}")`);
+    await expect(product).toBeVisible();
   }
 }
