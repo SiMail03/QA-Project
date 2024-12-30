@@ -10,6 +10,8 @@ export class LoginPage extends AbstractPage {
   readonly successMessage: Locator;
   readonly invalidCredentialsErrorMessage: Locator;
   readonly exceededLoginAttemptErrorMessage: Locator;
+  readonly logoutLink: Locator;
+  readonly logoutButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -30,6 +32,10 @@ export class LoginPage extends AbstractPage {
     this.exceededLoginAttemptErrorMessage = page.getByText(
       "Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour."
     );
+    this.logoutLink = page.locator(
+      '.dropdown-menu.dropdown-menu-right a:has-text("Logout")'
+    );
+    this.logoutButton = page.locator(".btn.btn-primary");
   }
 
   async login(email: string, password: string) {
@@ -40,6 +46,19 @@ export class LoginPage extends AbstractPage {
     await this.loginButton.click();
 
     await this.page.waitForTimeout(3000); // Timeout in milliseconds (3000ms = 3 seconds)
+  }
+
+  async logout() {
+    await this.myAccountButton.click();
+    await this.logoutLink.click();
+    await this.logoutButton.click();
+  }
+
+  async assertLogout() {
+    const currentUrl = this.page.url();
+    await expect(currentUrl).toBe(
+      "https://naveenautomationlabs.com/opencart/index.php?route=common/home"
+    );
   }
 
   async assertSuccessMessage() {
