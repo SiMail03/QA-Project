@@ -8,7 +8,7 @@ export class HomePage extends AbstractPage {
 
   readonly header: Header; // Add header instance
   readonly footer: Footer; // Add footer instance
-
+  readonly logo: Locator;
   readonly mainContent: Locator;
   readonly featuredProducts: Locator;
   readonly product: Locator;
@@ -23,11 +23,11 @@ export class HomePage extends AbstractPage {
 
     this.header = new Header(page); // Initialize Header
     this.footer = new Footer(page); // Initialize Footer
-
+    this.logo = page.locator("#logo");
     this.mainContent = page.locator("#common-home");
-    this.featuredProducts = page.locator("#carousel-banner-0");
+    this.featuredProducts = page.locator(".slideshow.swiper-viewport");
     this.product = page.locator(".product-thumb").first();
-    this.banners = page.locator("#carousel-banner-1");
+    this.banners = page.locator(".carousel.swiper-viewport");
     this.noItemFoundMessage = page.getByText(
       "There is no product that matches the search criteria."
     );
@@ -39,10 +39,13 @@ export class HomePage extends AbstractPage {
   }
 
   public async checkHomePage() {
+    await this.header.checkHeaderIsLoaded();
+    await expect(this.logo).toBeVisible();
     await expect(this.mainContent).toBeVisible();
     await expect(this.featuredProducts).toBeVisible();
     await expect(this.product).toBeVisible();
     await expect(this.banners).toBeVisible();
+    await this.footer.checkFooterIsLoaded();
   }
 
   public async searchItem(search: string) {

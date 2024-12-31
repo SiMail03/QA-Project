@@ -19,16 +19,29 @@ export class Header extends AbstractPage {
       'a[href="https://naveenautomationlabs.com/opencart/index.php?route=account/account"][title="My Account"].dropdown-toggle'
     );
 
-    this.wishListButton = page.getByRole("link", {
-      name: "Wish List",
-    });
+    this.wishListButton = page.locator("#wishlist-total");
     this.cartButton = page.getByRole("link", { name: "Shopping Cart" });
     this.checkOutButton = page.getByRole("link", { name: "Checkout" });
-    this.searchInput = page.getByPlaceholder("Search");
+    this.searchInput = page.locator("#search");
     this.searchButton = page.locator(".input-group-btn");
     this.cartInfo = page.locator(
       ".btn.btn-lg.btn-inverse.btn-block.dropdown-toggle"
     );
+    this.navBar = page.locator(".collapse.navbar-collapse.navbar-ex1-collapse");
+  }
+
+  public async checkHeaderIsLoaded() {
+    const elementsToCheck = [
+      this.header,
+      this.searchInput,
+      this.searchButton,
+      this.cartInfo,
+      this.navBar,
+    ];
+
+    for (const element of elementsToCheck) {
+      await expect(element).toBeVisible();
+    }
   }
 
   public async clickMyAccountButton() {
