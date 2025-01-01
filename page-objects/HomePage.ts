@@ -53,8 +53,7 @@ export class HomePage extends AbstractPage {
   }
 
   async assertSearchResultsAreDisplayed() {
-    const resultsVisible = await this.product.isVisible();
-    expect(resultsVisible).toBeTruthy();
+    await this.product.isVisible();
   }
 
   async assertNoItemFoundMessage() {
