@@ -22,7 +22,7 @@ export class Header extends AbstractPage {
     this.wishListButton = page.locator("#wishlist-total");
     this.cartButton = page.getByRole("link", { name: "Shopping Cart" });
     this.checkOutButton = page.getByRole("link", { name: "Checkout" });
-    this.searchInput = page.locator("#search");
+    this.searchInput = page.locator(".form-control.input-lg");
     this.searchButton = page.locator(".input-group-btn");
     this.cartInfo = page.locator(
       ".btn.btn-lg.btn-inverse.btn-block.dropdown-toggle"
