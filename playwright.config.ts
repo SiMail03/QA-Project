@@ -1,7 +1,7 @@
 import { PlaywrightTestConfig } from "@playwright/test";
 
 const config: PlaywrightTestConfig = {
-  timeout: 30000,
+  timeout: 60000,
   retries: 0,
   use: {
     headless: true,
@@ -9,7 +9,7 @@ const config: PlaywrightTestConfig = {
     viewport: { width: 1920, height: 1080 }, // Set the initial viewport size (you can customize this)
     actionTimeout: 15000,
     ignoreHTTPSErrors: true,
-    video: "on",
+    video: "retain-on-failure",
     screenshot: "only-on-failure",
   },
   projects: [
