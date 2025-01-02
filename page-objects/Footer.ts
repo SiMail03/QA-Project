@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
+import { AbstractPage } from "./AbstractPage";
 
-export class Footer {
+export class Footer extends AbstractPage {
   readonly termsAndConditionsLink: Locator;
   readonly deliveryInformationLink: Locator;
   readonly aboutUsLink: Locator;
@@ -18,10 +19,10 @@ export class Footer {
   readonly newsletterLink: Locator;
 
   constructor(page: Page) {
-    // Locate all links inside the footer by targeting the footer element
-    const footer = page.locator("footer"); // Locate the footer section
+    super(page);
 
-    // Locate each link within the footer using the "text=" selector for identifying the link text
+    const footer = page.locator("footer");
+
     this.termsAndConditionsLink = footer.locator(
       'a:has-text("Terms & Conditions")'
     );
@@ -45,7 +46,7 @@ export class Footer {
     this.newsletterLink = footer.locator('a:has-text("Newsletter")');
   }
 
-  public async checkFooterIsLoaded() {
+  async checkFooterIsLoaded() {
     const elementsToCheck = [
       this.termsAndConditionsLink,
       this.deliveryInformationLink,
@@ -67,5 +68,40 @@ export class Footer {
     for (const element of elementsToCheck) {
       await expect(element).toBeVisible();
     }
+  }
+
+  async assertTermsAndConditions() {
+    await this.termsAndConditionsLink.click();
+    await expect(this.page).toHaveURL(
+      "https://naveenautomationlabs.com/opencart/index.php?route=information/information&information_id=5"
+    );
+  }
+
+  async assertDeliveryInformation() {
+    await this.deliveryInformationLink.click();
+    await expect(this.page).toHaveURL(
+      "https://naveenautomationlabs.com/opencart/index.php?route=information/information&information_id=6"
+    );
+  }
+
+  async assertAboutUs() {
+    await this.aboutUsLink.click();
+    await expect(this.page).toHaveURL(
+      "https://naveenautomationlabs.com/opencart/index.php?route=information/information&information_id=4"
+    );
+  }
+
+  async assertPrivacyPolicy() {
+    await this.privacyPolicyLink.click();
+    await expect(this.page).toHaveURL(
+      "https://naveenautomationlabs.com/opencart/index.php?route=information/information&information_id=3"
+    );
+  }
+
+  async assertContactUs() {
+    await this.contactUsLink.click();
+    await expect(this.page).toHaveURL(
+      "https://naveenautomationlabs.com/opencart/index.php?route=information/contact"
+    );
   }
 }
