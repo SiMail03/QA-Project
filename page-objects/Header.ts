@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { AbstractPage } from "./AbstractPage";
 
-export class Header extends AbstractPage {
+export class Header {
   readonly header: Locator;
   readonly myAccountButton: Locator;
   readonly wishListButton: Locator;
@@ -13,7 +13,6 @@ export class Header extends AbstractPage {
   readonly navBar: Locator;
 
   constructor(page: Page) {
-    super(page);
     this.header = page.locator("#top");
     this.myAccountButton = page.locator(
       'a[href="https://naveenautomationlabs.com/opencart/index.php?route=account/account"][title="My Account"].dropdown-toggle'
