@@ -12,6 +12,7 @@ export class HomePage extends AbstractPage {
   readonly mainContent: Locator;
   readonly featuredProducts: Locator;
   readonly product: Locator;
+  readonly productLinks: Locator;
   readonly banners: Locator;
   readonly noItemFoundMessage: Locator;
   readonly searchResults: Locator;
@@ -27,6 +28,7 @@ export class HomePage extends AbstractPage {
     this.mainContent = page.locator("#common-home");
     this.featuredProducts = page.locator(".slideshow.swiper-viewport");
     this.product = page.locator(".product-thumb").first();
+    this.productLinks = page.locator(".caption");
     this.banners = page.locator(".carousel.swiper-viewport");
     this.noItemFoundMessage = page.getByText(
       "There is no product that matches the search criteria."
@@ -50,6 +52,11 @@ export class HomePage extends AbstractPage {
 
   public async searchItem(search: string) {
     await this.header.searchItem(search); // Use header to search
+  }
+
+  public async getProductLinkByName(name: string): Promise<Locator> {
+    const productLink = this.productLinks.locator(`a:has-text("${name}")`);
+    return productLink;
   }
 
   async assertSearchResultsAreDisplayed() {
