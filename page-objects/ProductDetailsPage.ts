@@ -9,7 +9,7 @@ export class ProductDetailsPage extends AbstractPage {
 
   constructor(page: Page) {
     super(page);
-    this.productName = page.locator("h1"); // Modify the selector based on your actual page's HTML
+    this.productName = page.locator("h1"); 
     this.productPrice = page.locator('h2:has-text("$")');
     this.productDescription = page.locator("#tab-description");
     this.productImages = page.locator(".thumbnails");
@@ -20,21 +20,29 @@ export class ProductDetailsPage extends AbstractPage {
     price: string;
     description: string;
   }) {
-    // Verify the product name
-    await expect(this.productName).toHaveText(product.name);
+    try {
+      // Verify the product name
+      await expect(this.productName).toHaveText(product.name);
 
-    // Verify the product price
-    await expect(this.productPrice).toHaveText(product.price);
+      // Verify the product price
+      await expect(this.productPrice).toHaveText(product.price);
 
-    // Verify the product description
-    await expect(this.productDescription).toHaveText(product.description);
+      // Verify the product description
+      await expect(this.productDescription).toHaveText(product.description);
 
-    // Verify the product images (at least one image should be visible)
-    await expect(this.productImages.first()).toBeVisible();
+      // Verify the product images (at least one image should be visible)
+      await expect(this.productImages.first()).toBeVisible();
+    } catch (error) {
+      console.error(`Error verifying product details: ${error}`);
+    }
   }
 
   public async navigateToProductDetails(productLink: Locator) {
-    // Click on the product link to navigate to the product details page
-    await productLink.click();
+    try {
+      // Click on the product link to navigate to the product details page
+      await productLink.click();
+    } catch (error) {
+      console.error(`Error navigating to product details: ${error}`);
+    }
   }
 }

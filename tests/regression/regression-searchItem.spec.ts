@@ -1,4 +1,3 @@
-
 import { test } from "@playwright/test";
 import { HomePage } from "../../page-objects/HomePage";
 
@@ -25,5 +24,16 @@ test.describe("Search Regression Tests", () => {
   test("Regression Test: Partial matches return correct results", async () => {
     await homePage.searchItem("Ma");
     await homePage.assertProductInSearchResults("Ma")
+  });
+
+  test("Regression Test: Special characters in search", async () => {
+    await homePage.searchItem("@#$%^&*");
+    await homePage.assertNoItemFoundMessage();
+  });
+
+  test("Regression Test: Search bar retains input after search", async () => {
+    const searchTerm = "Mac";
+    await homePage.searchItem(searchTerm);
+    await homePage.assertSearchBarContains(searchTerm);
   });
 });

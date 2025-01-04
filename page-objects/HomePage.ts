@@ -77,4 +77,9 @@ export class HomePage extends AbstractPage {
     const product = this.product.locator(`.caption:has-text("${productName}")`);
     await expect(product).toBeVisible();
   }
+
+  async assertSearchBarContains(searchTerm: string) {
+    const searchBarValue = await this.page.inputValue('input[name="search"]');
+    expect(searchBarValue).toBe(searchTerm);
+  }
 }
