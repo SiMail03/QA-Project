@@ -31,7 +31,8 @@ export class ShoppingCartPage {
 
   async addProductToCartByName(nameOfProduct: string) {
     const productLink = this.productLinks.locator(`text=${nameOfProduct}`);
-    await expect(productLink).toBeVisible();
+    await expect(this.cartLink).toBeVisible();
+
     await productLink.click();
     await this.addToCartButton.click();
   }
