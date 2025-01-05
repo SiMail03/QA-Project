@@ -24,6 +24,7 @@ test.describe("Wishlist Regression Tests", () => {
   });
 
   test("Regression Test: Remove item from wishlist", async () => {
+    await homePage.searchItem("MacBook");
     await wishlistPage.removeItemFromWishlist("MacBook");
     await wishlistPage.assertItemNotInWishlist("MacBook");
   });

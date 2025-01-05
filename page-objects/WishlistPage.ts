@@ -27,6 +27,13 @@ export class WishlistPage extends AbstractPage {
   }
 
   async removeItemFromWishlist(itemName: string) {
+    const itemLink = this.page
+      .locator(
+        `.product-thumb:has(.caption a:has-text("${itemName}")) .caption a`
+      )
+      .filter({ hasText: itemName });
+    await itemLink.first().click();
+    await this.addToWishlistButton.click();
     await this.navigateToWishlist.click();
     const itemRow = this.wishlistTable.locator(`tr:has-text("${itemName}")`);
     const removeButton = itemRow.locator(".btn-danger");
