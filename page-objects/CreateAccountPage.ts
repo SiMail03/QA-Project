@@ -152,17 +152,6 @@ export class CreateAccountPage extends AbstractPage {
     const errorMessage6Visible = await this.invalidPassword.isVisible();
     const errorMessage7Visible = await this.invalidConfirmPassword.isVisible();
  
-    // Log visibility for debugging
-    console.log({
-      errorMessage1Visible,
-      errorMessage2Visible,
-      errorMessage3Visible,
-      errorMessage4Visible,
-      errorMessage5Visible,
-      errorMessage6Visible,
-      errorMessage7Visible,
-    });
- 
     // Assert that at least one error message is visible
     expect(
       errorMessage1Visible ||
