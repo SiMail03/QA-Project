@@ -22,30 +22,32 @@ export class Footer extends AbstractPage {
     super(page);
 
     const footer = page.locator("footer");
+    const links = [
+      { name: "termsAndConditionsLink", text: "Terms & Conditions" },
+      { name: "deliveryInformationLink", text: "Delivery Information" },
+      { name: "aboutUsLink", text: "About Us" },
+      { name: "privacyPolicyLink", text: "Privacy Policy" },
+      { name: "contactUsLink", text: "Contact Us" },
+      { name: "returnsLink", text: "Returns" },
+      { name: "siteMapLink", text: "Site Map" },
+      { name: "brandsLink", text: "Brands" },
+      { name: "giftCertificatesLink", text: "Gift Certificates" },
+      { name: "affiliateLink", text: "Affiliate" },
+      { name: "specialsLink", text: "Specials" },
+      { name: "myAccountLink", text: "My Account" },
+      { name: "orderHistoryLink", text: "Order History" },
+      { name: "wishListLink", text: "Wish List" },
+      { name: "newsletterLink", text: "Newsletter" },
+    ];
 
-    this.termsAndConditionsLink = footer.locator(
-      'a:has-text("Terms & Conditions")'
-    );
-    this.deliveryInformationLink = footer.locator(
-      'a:has-text("Delivery Information")'
-    );
-    this.aboutUsLink = footer.locator('a:has-text("About Us")');
-    this.privacyPolicyLink = footer.locator('a:has-text("Privacy Policy")');
-    this.contactUsLink = footer.locator('a:has-text("Contact Us")');
-    this.returnsLink = footer.locator('a:has-text("Returns")');
-    this.siteMapLink = footer.locator('a:has-text("Site Map")');
-    this.brandsLink = footer.locator('a:has-text("Brands")');
-    this.giftCertificatesLink = footer.locator(
-      'a:has-text("Gift Certificates")'
-    );
-    this.affiliateLink = footer.locator('a:has-text("Affiliate")');
-    this.specialsLink = footer.locator('a:has-text("Specials")');
-    this.myAccountLink = footer.locator('a:has-text("My Account")');
-    this.orderHistoryLink = footer.locator('a:has-text("Order History")');
-    this.wishListLink = footer.locator('a:has-text("Wish List")');
-    this.newsletterLink = footer.locator('a:has-text("Newsletter")');
+    for (const link of links) {
+      this[link.name] = footer.locator(`a:has-text("${link.text}")`);
+    }
   }
 
+  /**
+   * Check if all footer links are visible.
+   */
   async checkFooterIsLoaded() {
     const elementsToCheck = [
       this.termsAndConditionsLink,
@@ -70,6 +72,9 @@ export class Footer extends AbstractPage {
     }
   }
 
+  /**
+   * Assert that the Terms and Conditions page is loaded.
+   */
   async assertTermsAndConditions() {
     await this.termsAndConditionsLink.click();
     await expect(this.page).toHaveURL(
@@ -77,6 +82,9 @@ export class Footer extends AbstractPage {
     );
   }
 
+  /**
+   * Assert that the Delivery Information page is loaded.
+   */
   async assertDeliveryInformation() {
     await this.deliveryInformationLink.click();
     await expect(this.page).toHaveURL(
@@ -84,6 +92,9 @@ export class Footer extends AbstractPage {
     );
   }
 
+  /**
+   * Assert that the About Us page is loaded.
+   */
   async assertAboutUs() {
     await this.aboutUsLink.click();
     await expect(this.page).toHaveURL(
@@ -91,6 +102,9 @@ export class Footer extends AbstractPage {
     );
   }
 
+  /**
+   * Assert that the Privacy Policy page is loaded.
+   */
   async assertPrivacyPolicy() {
     await this.privacyPolicyLink.click();
     await expect(this.page).toHaveURL(
@@ -98,6 +112,9 @@ export class Footer extends AbstractPage {
     );
   }
 
+  /**
+   * Assert that the Contact Us page is loaded.
+   */
   async assertContactUs() {
     await this.contactUsLink.click();
     await expect(this.page).toHaveURL(

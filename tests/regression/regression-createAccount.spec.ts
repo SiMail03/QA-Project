@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { CreateAccountPage } from "../../page-objects/CreateAccountPage";
 import { HomePage } from "../../page-objects/HomePage";
 
@@ -70,12 +70,13 @@ test.describe("Create Account Regression Tests", () => {
   });
 
   test("Show error for password mismatch", async () => {
-    await createAccountPage.createAccount(
+    await createAccountPage.createAccountWithPasswordMismatch(
       "John",
       "Doe",
-      "",
+      `user${Date.now()}@example.com`,
       "1234567890",
-      "Password123"
+      "Password123",
+      "Password456"
     );
     await createAccountPage.assertInvalidFields();
   });

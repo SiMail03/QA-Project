@@ -18,17 +18,34 @@ export class UserProfilePage extends AbstractPage {
   }
 
   async navigateToUserProfile() {
-    await this.page.goto("https://naveenautomationlabs.com/opencart/index.php?route=account/edit");
+    try {
+      await this.page.goto(
+        "https://naveenautomationlabs.com/opencart/index.php?route=account/edit"
+      );
+    } catch (error) {
+      console.error("Error navigating to user profile:", error);
+      throw error;
+    }
   }
 
   async updateProfile(firstName: string, lastName: string, telephone: string) {
-    await this.firstNameInput.fill(firstName);
-    await this.lastNameInput.fill(lastName);
-    await this.telephoneInput.fill(telephone);
-    await this.saveButton.click();
+    try {
+      await this.firstNameInput.fill(firstName);
+      await this.lastNameInput.fill(lastName);
+      await this.telephoneInput.fill(telephone);
+      await this.saveButton.click();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      throw error;
+    }
   }
 
   async assertProfileUpdated() {
-    await expect(this.successMessage).toBeVisible();
+    try {
+      await expect(this.successMessage).toBeVisible();
+    } catch (error) {
+      console.error("Profile update success message not visible:", error);
+      throw error;
+    }
   }
 }

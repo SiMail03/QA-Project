@@ -23,7 +23,7 @@ test.describe("Search Regression Tests", () => {
 
   test("Regression Test: Partial matches return correct results", async () => {
     await homePage.searchItem("Ma");
-    await homePage.assertProductInSearchResults("Ma")
+    await homePage.assertProductInSearchResults("Ma");
   });
 
   test("Regression Test: Special characters in search", async () => {

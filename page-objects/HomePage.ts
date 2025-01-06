@@ -1,13 +1,14 @@
 import { Header } from "./Header";
-import { Footer } from "./Footer"; // Import Footer class
+import { Footer } from "./Footer";
 import { expect, Locator, Page } from "@playwright/test";
 import { AbstractPage } from "./AbstractPage";
 
 export class HomePage extends AbstractPage {
   readonly url: string;
+  readonly header: Header;
+  readonly footer: Footer;
 
-  readonly header: Header; // Add header instance
-  readonly footer: Footer; // Add footer instance
+  // Locators
   readonly logo: Locator;
   readonly mainContent: Locator;
   readonly featuredProducts: Locator;
@@ -21,9 +22,10 @@ export class HomePage extends AbstractPage {
   constructor(page: Page) {
     super(page);
     this.url = "https://naveenautomationlabs.com/opencart";
+    this.header = new Header(page);
+    this.footer = new Footer(page);
 
-    this.header = new Header(page); // Initialize Header
-    this.footer = new Footer(page); // Initialize Footer
+    // Initialize locators
     this.logo = page.locator("#logo");
     this.mainContent = page.locator("#common-home");
     this.featuredProducts = page.locator(".slideshow.swiper-viewport");
@@ -36,10 +38,12 @@ export class HomePage extends AbstractPage {
     this.numOfItems = page.locator(".col-sm-6.text-right");
   }
 
+  // Navigation
   public async navigateToHomePage() {
     await this.page.goto(this.url);
   }
 
+  // Assertions
   public async checkHomePage() {
     await this.header.checkHeaderIsLoaded();
     await expect(this.logo).toBeVisible();
@@ -51,7 +55,7 @@ export class HomePage extends AbstractPage {
   }
 
   public async searchItem(search: string) {
-    await this.header.searchItem(search); // Use header to search
+    await this.header.searchItem(search);
   }
 
   public async getProductLinkByName(name: string): Promise<Locator> {
@@ -59,26 +63,26 @@ export class HomePage extends AbstractPage {
     return productLink;
   }
 
-  async assertSearchResultsAreDisplayed() {
+  public async assertSearchResultsAreDisplayed() {
     await this.product.isVisible();
   }
 
-  async assertNoItemFoundMessage() {
+  public async assertNoItemFoundMessage() {
     await expect(this.noItemFoundMessage).toContainText(
       "There is no product that matches the search criteria."
     );
   }
 
-  async assertNumberOfSearchResults(expectedCount: string) {
+  public async assertNumberOfSearchResults(expectedCount: string) {
     await expect(this.numOfItems).toContainText(expectedCount);
   }
 
-  async assertProductInSearchResults(productName: string) {
+  public async assertProductInSearchResults(productName: string) {
     const product = this.product.locator(`.caption:has-text("${productName}")`);
     await expect(product).toBeVisible();
   }
 
-  async assertSearchBarContains(searchTerm: string) {
+  public async assertSearchBarContains(searchTerm: string) {
     const searchBarValue = await this.page.inputValue('input[name="search"]');
     expect(searchBarValue).toBe(searchTerm);
   }

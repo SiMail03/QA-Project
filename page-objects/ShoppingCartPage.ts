@@ -30,37 +30,67 @@ export class ShoppingCartPage {
   }
 
   async addProductToCartByName(nameOfProduct: string) {
-    const productLink = this.productLinks.locator(`text=${nameOfProduct}`);
-    await expect(this.cartLink).toBeVisible();
-    await productLink.click();
-    await this.addToCartButton.click();
+    try {
+      const productLink = this.productLinks.locator(`text=${nameOfProduct}`);
+      await expect(this.cartLink).toBeVisible();
+      await productLink.click();
+      await this.addToCartButton.click();
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      throw error;
+    }
   }
 
   async navigateToCartPage() {
-    await expect(this.cartLink).toBeVisible();
-    await this.cartLink.click();
+    try {
+      await expect(this.cartLink).toBeVisible();
+      await this.cartLink.click();
+    } catch (error) {
+      console.error("Error navigating to cart page:", error);
+      throw error;
+    }
   }
 
   async assertItemInCart(productName: string) {
-    const cartItem = this.cartItemsList.locator(
-      `tr:has-text("${productName}")`
-    );
-    await expect(cartItem).toBeVisible();
+    try {
+      const cartItem = this.cartItemsList.locator(
+        `tr:has-text("${productName}")`
+      );
+      await expect(cartItem).toBeVisible();
+    } catch (error) {
+      console.error("Error asserting item in cart:", error);
+      throw error;
+    }
   }
 
   async proceedToCheckout() {
-    await this.checkoutButton.click();
+    try {
+      await this.checkoutButton.click();
+    } catch (error) {
+      console.error("Error proceeding to checkout:", error);
+      throw error;
+    }
   }
 
   async removeItemFromCart(productName: string) {
-    const productRow = this.cartItemsList.locator(
-      `tr:has-text("${productName}")`
-    );
-    const removeButton = productRow.locator(".btn-danger");
-    await removeButton.click();
+    try {
+      const productRow = this.cartItemsList.locator(
+        `tr:has-text("${productName}")`
+      );
+      const removeButton = productRow.locator(".btn-danger");
+      await removeButton.click();
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+      throw error;
+    }
   }
 
   async assertSuccessMessageVisible() {
-    await expect(this.successMessage).toBeVisible();
+    try {
+      await expect(this.successMessage).toBeVisible();
+    } catch (error) {
+      console.error("Success message not visible:", error);
+      throw error;
+    }
   }
 }

@@ -2,7 +2,6 @@ import { expect, Locator, Page } from "@playwright/test";
 import { AbstractPage } from "./AbstractPage";
 
 export class OrderHistoryPage extends AbstractPage {
-  readonly orderHistoryTable: Locator;
   readonly orderHistoryTitle: Locator;
 
   constructor(page: Page) {

@@ -33,18 +33,33 @@ export class ResetPasswordPage {
   }
 
   async resetForgottenPassword(email: string) {
-    await this.myAccountButton.click();
-    await this.loginAccountLink.click();
-    await this.forgotPasswordLink.click();
-    await this.emailInput.fill(email);
-    await this.submitButton.click();
+    try {
+      await this.myAccountButton.click();
+      await this.loginAccountLink.click();
+      await this.forgotPasswordLink.click();
+      await this.emailInput.fill(email);
+      await this.submitButton.click();
+    } catch (error) {
+      console.error("Error during resetting forgotten password:", error);
+      throw error;
+    }
   }
 
   async assertSuccessMessageVisible() {
-    await expect(this.successMessage).toBeVisible();
+    try {
+      await expect(this.successMessage).toBeVisible();
+    } catch (error) {
+      console.error("Success message not visible:", error);
+      throw error;
+    }
   }
 
   async assertErrorMessageVisible() {
-    await expect(this.errorMessage).toBeVisible();
+    try {
+      await expect(this.errorMessage).toBeVisible();
+    } catch (error) {
+      console.error("Error message not visible:", error);
+      throw error;
+    }
   }
 }

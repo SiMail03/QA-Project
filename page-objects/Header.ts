@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { AbstractPage } from "./AbstractPage";
 
-export class Header {
+export class Header extends AbstractPage {
   readonly header: Locator;
   readonly myAccountButton: Locator;
   readonly wishListButton: Locator;
@@ -13,6 +13,7 @@ export class Header {
   readonly navBar: Locator;
 
   constructor(page: Page) {
+    super(page);
     this.header = page.locator("#top");
     this.myAccountButton = page.locator(
       'a[href="https://naveenautomationlabs.com/opencart/index.php?route=account/account"][title="My Account"].dropdown-toggle'
@@ -46,7 +47,8 @@ export class Header {
   public async clickMyAccountButton() {
     await this.myAccountButton.click();
   }
-  async searchItem(search: string) {
+
+  public async searchItem(search: string) {
     await this.searchInput.fill(search);
     await this.searchButton.click();
   }

@@ -7,11 +7,19 @@ test("Product Details Page Test", async ({ page }) => {
   const homePage = new HomePage(page);
   const productDetailsPage = new ProductDetailsPage(page);
 
+  // Constants
+  const searchQuery = "MacBook Air";
+  const expectedProduct = {
+    name: "MacBook Air",
+    price: "$1,202.00",
+    description:
+      "MacBook Air is ultrathin, ultraportable, and ultra unlike anything else. But you don’t lose inches and pounds overnight. It’s the result of rethinking conventions. Of multiple wireless innovations. And of breakthrough design. With MacBook Air, mobile computing suddenly has a new standard.",
+  };
+
   // Step 1: Navigate to homepage
   await homePage.navigateToHomePage();
 
-  // Step 2: Search for a product (assuming search bar is implemented)
-  const searchQuery = "MacBook Air";
+  // Step 2: Search for a product
   await homePage.searchItem(searchQuery);
 
   // Step 3: Click on the first product from the search results
@@ -19,12 +27,5 @@ test("Product Details Page Test", async ({ page }) => {
   await productDetailsPage.navigateToProductDetails(productLink);
 
   // Step 4: Verify product details
-  const product = {
-    name: "MacBook Air", // Replace with expected product name
-    price: "$1,202.00", // Replace with expected product price
-    description:
-      "MacBook Air is ultrathin, ultraportable, and ultra unlike anything else. But you don’t lose inches and pounds overnight. It’s the result of rethinking conventions. Of multiple wireless innovations. And of breakthrough design. With MacBook Air, mobile computing suddenly has a new standard.",
-  };
-
-  await productDetailsPage.verifyProductDetails(product);
+  await productDetailsPage.verifyProductDetails(expectedProduct);
 });

@@ -12,6 +12,7 @@ export class LoginPage extends AbstractPage {
   readonly exceededLoginAttemptErrorMessage: Locator;
   readonly logoutLink: Locator;
   readonly logoutButton: Locator;
+  private readonly TIMEOUT = 3000; // Timeout in milliseconds
 
   constructor(page: Page) {
     super(page);
@@ -21,7 +22,6 @@ export class LoginPage extends AbstractPage {
     this.loginAccountLink = page.locator(
       '.dropdown-menu.dropdown-menu-right a:has-text("Login")'
     );
-
     this.emailInput = page.locator("#input-email");
     this.passwordInput = page.locator("#input-password");
     this.loginButton = page.getByRole("button", { name: "Login" });
@@ -44,8 +44,7 @@ export class LoginPage extends AbstractPage {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
-
-    await this.page.waitForTimeout(3000); // Timeout in milliseconds (3000ms = 3 seconds)
+    await this.page.waitForTimeout(this.TIMEOUT);
   }
 
   async logout() {
@@ -92,10 +91,10 @@ export class LoginPage extends AbstractPage {
     const invalidPassword = "invalidPassword";
     const maxAttempts = 5;
     for (let i = 0; i < maxAttempts; i++) {
-      await this.emailInput.fill(email);
-      await this.passwordInput.fill(password);
+      await this.emailInput.fill(invalidUsername);
+      await this.passwordInput.fill(invalidPassword);
       await this.loginButton.click();
     }
-    await this.page.waitForTimeout(2000); // Timeout in milliseconds (3000ms = 3 seconds)
+    await this.page.waitForTimeout(this.TIMEOUT);
   }
 }
