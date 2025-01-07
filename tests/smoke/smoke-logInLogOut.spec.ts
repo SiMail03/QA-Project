@@ -6,8 +6,8 @@ require("dotenv").config();
 test("Smoke Test: Login and Logout - Positive Path", async ({ page }) => {
   const homePage = new HomePage(page);
   const loginPage = new LoginPage(page);
-  const email = process.env.TEST_EMAIL || "";
-  const password = process.env.TEST_PASSWORD || "";
+  const email = "testautomation123@demo.com";
+  const password = "automation123";
 
   // Navigate to Home Page
   await homePage.navigateToHomePage();
