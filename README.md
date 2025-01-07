@@ -47,13 +47,13 @@ This repository contains automated tests for the Naveena AutomationLabs platform
 ### Run Smoke Tests Only
    
     
-    npm run tests:smoke
+    npx playwright tests/smoke
     
     
 ### Run Regression Tests Only
     
     
-    npm run tests:regression
+    npx playwright tests/regression
 
 ## Test Scenarios
 
